@@ -1,6 +1,8 @@
-function net = feedForward(net, x)
+function net = feedForward(net, x, input_do_rate, hidden_do_rate)
 	numLayers = length(net.layers); % total number of layers
-	net.layers{1}.a{1} = x; 
+	net.layers{1}.a{1} = x;
+	net.layers{1}.do{1} = rand(size(net.layers{1}.a{1})) <= input_do_rate;
+    net.layers{1}.a{1} = net.layers{1}.a{1} .* net.layers{1}.do{1};
 	inputMaps = 1; % Number of input feature maps
 	% For each layer compute result matrices
 	for l = 2:numLayers
@@ -13,6 +15,8 @@ function net = feedForward(net, x)
 				end
 				% final result of the layer is sigmoid of the sum plus the bias
 				net.layers{l}.a{j} = sigmoid(z + net.layers{l}.b{j});
+	            net.layers{l}.do{j} = rand(size(net.layers{l}.a{j})) <= input_do_rate; 
+                net.layers{l}.a{j} = net.layers{l}.a{j} .* net.layers{l}.do{j};
 			end
 			% input feature maps for the next layer are the output maps for this layer
 			inputMaps = net.layers{l}.outputMaps;
@@ -35,6 +39,8 @@ function net = feedForward(net, x)
 				
 				% final result of the layer is sigmoid of the sum plus the bias
 				net.layers{l}.a{i} = sigmoid(z + net.layers{l}.b{i});
+	            net.layers{l}.do{i} = rand(size(net.layers{l}.a{i})) <= input_do_rate; 
+                net.layers{l}.a{i} = net.layers{l}.a{i} .* net.layers{l}.do{i};
 			end
 
 		elseif strcmp(net.layers{l}.type, 'O')

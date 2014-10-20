@@ -22,7 +22,7 @@ function cnn = test
 	};
 	alpha = 1;
 	batchSize = 50;
-	numEpochs = 1;
+	numEpochs = 5;
 	cnn = setup(cnn, train_x, train_y);
 	cnn = train(cnn, train_x, train_y, alpha, batchSize, numEpochs);
 end
