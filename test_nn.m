@@ -12,6 +12,7 @@ rand('state',0)
 nn.layers = {
     struct('type', 'I') %input layer
     struct('type', 'F') %fully connected layer
+    struct('type', 'F') %fully connected layer
     struct('type', 'O') %output layer
 };
 alpha = 1;
