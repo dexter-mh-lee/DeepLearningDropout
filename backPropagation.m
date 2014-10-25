@@ -67,7 +67,7 @@ function net = backPropagation(net, y, alpha)
 				net.layers{l}.b{j} = net.layers{l}.b{j} - alpha * db; % Update bias
 			end
 
-		elseif strcmp(net.layers{l}.type, 'F') % Convolutional layer
+		elseif strcmp(net.layers{l}.type, 'F') % Fully connected layer
 			for j = 1:length(net.layers{l}.a)
 				a = net.layers{l - 1}.a{j};
 				dw = net.layers{l}.d{j} * reshape(a, size(a, 1) * size(a, 2), size(a, 3))' / size(net.layers{l}.d{j}, 3);

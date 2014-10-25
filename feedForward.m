@@ -2,7 +2,7 @@ function net = feedForward(net, x, input_do_rate, hidden_do_rate)
 	numLayers = length(net.layers); % total number of layers
 	net.layers{1}.a{1} = x;
 	net.layers{1}.do{1} = rand(size(net.layers{1}.a{1})) <= input_do_rate;
-    net.layers{1}.a{1} = net.layers{1}.a{1} .* net.layers{1}.do{1};
+  net.layers{1}.a{1} = net.layers{1}.a{1} .* net.layers{1}.do{1};
 	inputMaps = 1; % Number of input feature maps
 	% For each layer compute result matrices
 	for l = 2:numLayers
@@ -32,9 +32,11 @@ function net = feedForward(net, x, input_do_rate, hidden_do_rate)
 			% Fully connected layer maps each input map to an output map
 			for i = 1:inputMaps
 				% If the previous layer was a convolutional or max-pooling layer convert to vectors
-        		sa = size(net.layers{l - 1}.a{j});
-				if(length(sa)>2) z = net.layers{l}.w{i} * reshape(net.layers{l - 1}.a{j}, sa(1) * sa(2), sa(3)); % If previous layer was convolutional or max-pooling layer convert matrix to vector
-				else z = net.layers{l}.w{i} * net.layers{l - 1}.a{j};
+        sa = size(net.layers{l - 1}.a{i});
+				if(length(sa)>2) 
+          z = net.layers{l}.w{i} * reshape(net.layers{l - 1}.a{i}, sa(1) * sa(2), sa(3)); % If previous layer was convolutional or max-pooling layer convert matrix to vector
+        else
+          z = net.layers{l}.w{i} * net.layers{l - 1}.a{i};
 				end
 				
 				% final result of the layer is sigmoid of the sum plus the bias
@@ -48,8 +50,10 @@ function net = feedForward(net, x, input_do_rate, hidden_do_rate)
 			z = [];
 			for j = 1 : inputMaps
 				sa = size(net.layers{l - 1}.a{j});
-				if(length(sa)>2) z = [z;reshape(net.layers{l - 1}.a{j}, sa(1) * sa(2), sa(3))]; % If previous layer was convolutional or max-pooling layer convert matrix to vector
-				else z = [z;net.layers{l - 1}.a{j}];
+				if(length(sa)>2) 
+          z = [z;reshape(net.layers{l - 1}.a{j}, sa(1) * sa(2), sa(3))]; % If previous layer was convolutional or max-pooling layer convert matrix to vector
+        else
+          z = [z;net.layers{l - 1}.a{j}];
 				end
 			end
 			net.layers{l}.a{1} = sigmoid(bsxfun(@plus, net.layers{l}.w{1} * z, net.layers{l}.b{1}));
