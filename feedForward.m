@@ -15,7 +15,7 @@ function net = feedForward(net, x, input_do_rate, hidden_do_rate)
 				end
 				% final result of the layer is sigmoid of the sum plus the bias
 				net.layers{l}.a{j} = sigmoid(z + net.layers{l}.b{j});
-	            net.layers{l}.do{j} = rand(size(net.layers{l}.a{j})) <= input_do_rate; 
+	            net.layers{l}.do{j} = rand(size(net.layers{l}.a{j})) <= hidden_do_rate; 
                 net.layers{l}.a{j} = net.layers{l}.a{j} .* net.layers{l}.do{j};
 			end
 			% input feature maps for the next layer are the output maps for this layer
@@ -41,7 +41,7 @@ function net = feedForward(net, x, input_do_rate, hidden_do_rate)
 				
 				% final result of the layer is sigmoid of the sum plus the bias
 				net.layers{l}.a{i} = sigmoid(z + net.layers{l}.b{i});
-	            net.layers{l}.do{i} = rand(size(net.layers{l}.a{i})) <= input_do_rate; 
+	            net.layers{l}.do{i} = rand(size(net.layers{l}.a{i})) <= hidden_do_rate; 
                 net.layers{l}.a{i} = net.layers{l}.a{i} .* net.layers{l}.do{i};
 			end
 
