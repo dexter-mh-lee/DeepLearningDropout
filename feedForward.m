@@ -32,11 +32,11 @@ function net = feedForward(net, x, input_do_rate, hidden_do_rate)
 			% Fully connected layer maps each input map to an output map
 			for i = 1:inputMaps
 				% If the previous layer was a convolutional or max-pooling layer convert to vectors
-        sa = size(net.layers{l - 1}.a{i});
+       			sa = size(net.layers{l - 1}.a{i});
 				if(length(sa)>2) 
-          z = net.layers{l}.w{i} * reshape(net.layers{l - 1}.a{i}, sa(1) * sa(2), sa(3)); % If previous layer was convolutional or max-pooling layer convert matrix to vector
-        else
-          z = net.layers{l}.w{i} * net.layers{l - 1}.a{i};
+		          z = net.layers{l}.w{i} * reshape(net.layers{l - 1}.a{i}, sa(1) * sa(2), sa(3)); % If previous layer was convolutional or max-pooling layer convert matrix to vector
+		        else
+		          z = net.layers{l}.w{i} * net.layers{l - 1}.a{i};
 				end
 				
 				% final result of the layer is sigmoid of the sum plus the bias

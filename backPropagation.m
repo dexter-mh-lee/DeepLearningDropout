@@ -70,7 +70,8 @@ function net = backPropagation(net, y, alpha)
 		elseif strcmp(net.layers{l}.type, 'F') % Fully connected layer
 			for j = 1:length(net.layers{l}.a)
 				a = net.layers{l - 1}.a{j};
-				dw = net.layers{l}.d{j} * reshape(a, size(a, 1) * size(a, 2), size(a, 3))' / size(net.layers{l}.d{j}, 3);
+				if(ndims(a) > 2) a = reshape(a, size(a, 1) * size(a, 2), size(a, 3)); end
+				dw = net.layers{l}.d{j} * a' / size(net.layers{l}.d{j}, 3);
 				net.layers{l}.w{j} = net.layers{l}.w{j} - alpha * dw; % Update weight matrix
 				db = sum(net.layers{l}.d{j}(:)) / size(net.layers{l}.d{j}, 3);
 				net.layers{l}.b{j} = net.layers{l}.b{j} - alpha * db; % Update bias

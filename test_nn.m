@@ -1,3 +1,4 @@
+clc
 clear
 close all
 home
@@ -15,9 +16,11 @@ nn.layers = {
     struct('type', 'F') %fully connected layer
     struct('type', 'O') %output layer
 };
+size(train_x)
+size(train_y)
 alpha = 1;
 batchSize = 50;
-numEpochs = 5;
+numEpochs = 1;
 nn = setup_cnn(nn, train_x, train_y);
 nn = train_cnn(nn, train_x, train_y, alpha, batchSize, numEpochs);
 
