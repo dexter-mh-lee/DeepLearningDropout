@@ -13,7 +13,7 @@ function net = backPropagation(net, y, alpha)
 	% Perform gradient descent, no weights for max-pooling layer
 	for l = 2 : numLayers
 		net.layers{l}.b = net.layers{l}.b - alpha * sum(net.layers{l}.d,2) / size(net.layers{l}.d,2);
-		net.layers{l}.w = net.layers{l}.w - alpha * net.layers{l}.d * net.layers{l - 1}.a';
+		net.layers{l}.w = net.layers{l}.w - alpha * net.layers{l}.d * net.layers{l - 1}.a' / size(net.layers{l}.d,2);
 	end
 
 end
