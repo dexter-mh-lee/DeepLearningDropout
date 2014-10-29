@@ -24,10 +24,10 @@ function output = test_nn(alpha, batchSize, numEpochs, input_do_rate, hidden_do_
     % test_x = double(test_x');
     % train_y = double(train_y');
     % test_y = double(test_y');
-    alpha = 0.3;
+    %alpha = 0.3;
     %alpha = 1;
-    batchSize = 25;
-    numEpochs = 40;
+    %batchSize = 25;
+    %numEpochs = 40;
     nn = setup_nn(nn, train_x, train_y);
     nn = train_nn(nn, train_x, train_y, alpha, batchSize, numEpochs, input_do_rate, hidden_do_rate);
 
