@@ -14,11 +14,13 @@ for a = 1:2
             alpha = alphas(a);
             batchSize = batchSizes(b);
             numEpochs = epochNums(e);
+            
             input_do_rate = 1;
             hidden_do_rate = 1;
             tic;
             errors_1 = test_nn(alpha, batchSize, numEpochs, input_do_rate, hidden_do_rate);
             toc;
+            er = output.er;
             disp(sprintf('alpha: %d batchSize: %d numEpochs: %d input_do_rate: %d hidden_do_rate: %d error: %d',...
                 alpha, batchSize, numEpochs, input_do_rate, hidden_do_rate, errors_1(numEpochs)));
 
@@ -27,6 +29,7 @@ for a = 1:2
             tic;
             errors_2 = test_nn(alpha, batchSize, numEpochs, input_do_rate, hidden_do_rate);
             toc;
+            er = output.er;
             disp(sprintf('alpha: %d batchSize: %d numEpochs: %d input_do_rate: %d hidden_do_rate: %d error: %d',...
                 alpha, batchSize, numEpochs, input_do_rate, hidden_do_rate, errors_2(numEpochs)));
 
@@ -35,6 +38,7 @@ for a = 1:2
             tic;
             errors_3 = test_nn(alpha, batchSize, numEpochs, input_do_rate, hidden_do_rate);
             toc;
+            er = output.er;
             disp(sprintf('alpha: %d batchSize: %d numEpochs: %d input_do_rate: %d hidden_do_rate: %d error: %d',...
                 alpha, batchSize, numEpochs, input_do_rate, hidden_do_rate, errors_3(numEpochs)));
             
