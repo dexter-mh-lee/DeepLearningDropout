@@ -1,6 +1,6 @@
 function [er, bad] = testerror(net, x, y)
     %  feedforward
-    net = feedForward_nn(net, x, 1, 1);
+    net = feedForward_test_nn(net, x, 1, 1);
     [~, h] = max(net.layers{end}.a);
     [~, a] = max(y);
     bad = find(h ~= a);

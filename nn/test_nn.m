@@ -18,6 +18,8 @@ function output = test_nn(alpha, batchSize, numEpochs, input_do_rate, hidden_do_
         struct('type', 'O') %output layer
     };
 
+    nn.errors = zeros(numEpochs,1);
+
     train_x = reshape(train_x, size(train_x,1), size(train_x,3));
     test_x = reshape(test_x, size(test_x,1), size(test_x,3));
     % train_x = double(train_x');
@@ -29,12 +31,12 @@ function output = test_nn(alpha, batchSize, numEpochs, input_do_rate, hidden_do_
     %batchSize = 25;
     %numEpochs = 40;
     nn = setup_nn(nn, train_x, train_y);
-    nn = train_nn(nn, train_x, train_y, alpha, batchSize, numEpochs, input_do_rate, hidden_do_rate);
+    nn = train_nn(nn, train_x, train_y, alpha, batchSize, numEpochs, input_do_rate, hidden_do_rate, test_x, test_y);
 
     % testing
 
-    [er, bad] = testerror(nn, test_x, test_y);
+    %[er, bad] = testerror(nn, test_x, test_y);
 
-    output = er;
+    output = nn.errors;
 end
 
