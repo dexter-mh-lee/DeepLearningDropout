@@ -2,7 +2,8 @@ function output = test_nn(alpha, batchSize, numEpochs, input_do_rate, hidden_do_
     %%
     %load ../data/letterrecognition.mat
     %load ../data/mnist_uint8.mat
-    load ../data/gisette.mat
+%     load ../data/gisette.mat
+    load ../data/magic04.mat
     %% 
 
     rand('state',0)
@@ -35,6 +36,7 @@ function output = test_nn(alpha, batchSize, numEpochs, input_do_rate, hidden_do_
 
     [er, bad] = testerror(nn, test_x, test_y);
 
-    output = er;
+    output.er = er;
+    output.nn = nn;
 end
 
