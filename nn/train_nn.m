@@ -33,7 +33,6 @@ function net = train_nn(net, x, y, test_x, test_y, opt)
         end
         [er, bad] = testerror(net, test_x, test_y);
         net.errors(i) = er;
-        er
     end
     
 %      net.layers{2}.w = net.layers{2}.w * opt.input_do_rate;

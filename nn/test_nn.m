@@ -38,7 +38,7 @@ function output = test_nn(opt);
 
     %[er, bad] = testerror(nn, test_x, test_y);
 
-    output = nn;%.errors;
+    output = nn.errors;
 
 end
 
