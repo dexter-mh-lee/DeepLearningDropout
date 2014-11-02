@@ -1,4 +1,4 @@
-function net = backPropagation(net, y, alpha)
+function net = backPropagation_nn(net, y, opt)
 	numLayers = length(net.layers);
 
 	e = net.layers{numLayers}.a - y; % Total error
@@ -7,13 +7,18 @@ function net = backPropagation(net, y, alpha)
 
 	% Compute delta values for each layer
 	for l = (numLayers - 1) : -1 : 1
-		net.layers{l}.d = (net.layers{l + 1}.w' * net.layers{l + 1}.d) .* (net.layers{l}.a .* (1 - net.layers{l}.a));
+		if opt.gaussian
+			grad = net.layers{l}.ga .* (net.layers{l}.a .* (1 - net.layers{l}.a));
+		else
+			grad = (net.layers{l}.a .* (1 - net.layers{l}.a));
+		end	
+		net.layers{l}.d = (net.layers{l + 1}.w' * net.layers{l + 1}.d) .* grad;
 	end
 
 	% Perform gradient descent, no weights for max-pooling layer
 	for l = 2 : numLayers
-		net.layers{l}.b = net.layers{l}.b - alpha * sum(net.layers{l}.d,2) / size(net.layers{l}.d,2);
-		net.layers{l}.w = net.layers{l}.w - alpha * net.layers{l}.d * net.layers{l - 1}.a' / size(net.layers{l}.d,2);
+		net.layers{l}.b = net.layers{l}.b - opt.alpha * sum(net.layers{l}.d,2) / size(net.layers{l}.d,2);
+		net.layers{l}.w = net.layers{l}.w - opt.alpha * net.layers{l}.d * net.layers{l - 1}.a' / size(net.layers{l}.d,2);
 	end
 
 end
