@@ -7,4 +7,5 @@ function opt = initializeOptions()
 	opt.hidden_do_rate = 0.5;
 	opt.gaussian = false;
 	opt.dropout = true;
+    opt.noiseScale = 0.06; % Found emperically. Relative noise to dropout rate
 end

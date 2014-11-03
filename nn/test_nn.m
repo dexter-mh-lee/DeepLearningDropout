@@ -1,4 +1,4 @@
-function output = test_nn(opt);
+function [testErrors, trainingErrors] = test_nn(opt);
 
     %%
     %load ../data/letterrecognition.mat
@@ -20,7 +20,9 @@ function output = test_nn(opt);
         struct('type', 'O') %output layer
     };
 
-    nn.errors = zeros(opt.numEpochs,1);
+    nn.testErrors = zeros(opt.numEpochs,1);
+
+    nn.trainingErrors = zeros(opt.numEpochs,1);
 
     train_x = reshape(train_x, size(train_x,1), size(train_x,3));
     test_x = reshape(test_x, size(test_x,1), size(test_x,3));
@@ -38,7 +40,8 @@ function output = test_nn(opt);
 
     %[er, bad] = testerror(nn, test_x, test_y);
 
-    output = nn.errors;
+    testErrors = nn.testErrors;
+    trainingErrors = nn.trainingErrors;
 
 end
 

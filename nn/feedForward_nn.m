@@ -5,7 +5,9 @@ function net = feedForward_nn(net, x, opt, epochNum)
     ido = opt.input_do_rate(epochNum);
     hdo = opt.hidden_do_rate(epochNum);
     if opt.gaussian
-        net.layers{1}.ga = normrnd(1, sqrt((1-ido)/ido), size(net.layers{1}.a));
+        noiseRate = 1-opt.noiseScale*(1-ido); %Scale noise from dropout rate.
+        noiseSD = sqrt((1-noiseRate)/noiseRate); %Choose variance, then find standard deviation
+        net.layers{1}.ga = normrnd(1, noiseSD, size(net.layers{1}.a));
         net.layers{1}.a = net.layers{1}.a .* net.layers{1}.ga;
     end
     if opt.dropout
@@ -16,7 +18,9 @@ function net = feedForward_nn(net, x, opt, epochNum)
 	for l = 2 : numLayers
 		net.layers{l}.a = sigmoid(bsxfun(@plus, net.layers{l}.w * net.layers{l - 1}.a, net.layers{l}.b));
         if l < numLayers && opt.gaussian
-            net.layers{l}.ga = normrnd(1, sqrt((1-hdo)/hdo), size(net.layers{l}.a));
+            noiseRate = 1-opt.noiseScale*(1-hdo);
+            noiseSD = sqrt((1-noiseRate)/noiseRate);
+            net.layers{l}.ga = normrnd(1, noiseSD, size(net.layers{l}.a));
             net.layers{l}.a = net.layers{l}.a .* net.layers{l}.ga;
         end
         if l < numLayers && opt.dropout

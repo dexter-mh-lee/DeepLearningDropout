@@ -23,6 +23,7 @@ function net = train_nn(net, x, y, test_x, test_y, opt)
     for i = 1 : opt.numEpochs
         %disp(['epoch ' num2str(i) '/' num2str(opt.numEpochs)]);
         kk = randperm(m);
+        meanTrainingError = 0;
         for l = 1 : numBatches
             % each column is one training instance
             batch_x = x(:, kk((l - 1) * opt.batchSize + 1 : l * opt.batchSize));
@@ -30,9 +31,12 @@ function net = train_nn(net, x, y, test_x, test_y, opt)
 
             net = feedForward_nn(net, batch_x, opt, i);
             net = backPropagation_nn(net, batch_y, opt);
+            meanTrainingError = meanTrainingError + net.L;
         end
+        meanTrainingError = meanTrainingError / numBatches;
         [er, bad] = testerror(net, test_x, test_y);
-        net.errors(i) = er;
+        net.testErrors(i) = er;
+        net.trainingErrors(i) = meanTrainingError;
     end
     
 %      net.layers{2}.w = net.layers{2}.w * opt.input_do_rate;

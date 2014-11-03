@@ -4,48 +4,82 @@ close all
 home
 addpath ../util;
 
-alphas = [1,8];
-batchSizes = [10];
-epochNums = [200];
+numEpochs = 200;
+opt = initializeOptions();
+opt.alpha = 1; 
+opt.batchSize = 10;
+opt.numEpochs = numEpochs;
 
-for a = 1:1%2
-    for b = 1:1
-        for e = 1:1
-            opt = initializeOptions();
-            opt.alpha = alphas(a);
-            opt.batchSize = batchSizes(b);
-            opt.numEpochs = epochNums(e);
-            
-            opt.input_do_rate = 1;
-            opt.hidden_do_rate = 1;
-            tic;
-            errors_1 = test_nn(opt);
-            toc;
-            % er = output.er;
-            disp(sprintf('alpha: %d batchSize: %d numEpochs: %d input_do_rate: %d hidden_do_rate: %d error: %d',...
-                opt.alpha, opt.batchSize, opt.numEpochs, opt.input_do_rate, opt.hidden_do_rate, errors_1(opt.numEpochs)));
+dropoutRates = 0.5:0.01:1.0;
 
-            opt.input_do_rate = 1.0;
-            opt.hidden_do_rate = 0.9;
-            tic;
-            errors_2 = test_nn(opt);
-            toc;
-            % er = output.er;
-            disp(sprintf('alpha: %d batchSize: %d numEpochs: %d input_do_rate: %d hidden_do_rate: %d error: %d',...
-                opt.alpha, opt.batchSize, opt.numEpochs, opt.input_do_rate, opt.hidden_do_rate, errors_2(opt.numEpochs)));
+pTesterrorTrainingerror = zeros(length(dropoutRates), numEpochs, 2);
 
-            opt.input_do_rate = 0.8;
-            opt.hidden_do_rate = 0.5;
-            tic;
-            errors_3 = test_nn(opt);
-            toc;
-            % er = output.er;
-            disp(sprintf('alpha: %d batchSize: %d numEpochs: %d input_do_rate: %d hidden_do_rate: %d error: %d',...
-                opt.alpha, opt.batchSize, opt.numEpochs, opt.input_do_rate, opt.hidden_do_rate, errors_3(opt.numEpochs)));
-            
-            plot(1:opt.numEpochs, errors_1, 'r', 1:opt.numEpochs, errors_2, 'g', 1:opt.numEpochs, errors_3, 'b');
-            hold on;
-            figure;
-        end
-    end
+for do = 1:length(dropoutRates)
+    opt.input_do_rate = dropoutRates(do);
+    opt.hidden_do_rate = dropoutRates(do);
+    [testErrors, trainingErrors] = test_nn(opt);
+    pTesterrorTrainingerror(do,:,1) = reshape(testErrors, [1, numEpochs, 1]);
+    pTesterrorTrainingerror(do,:,2) = reshape(trainingErrors, [1, numEpochs, 1]);
 end
+
+save('result.mat','pTesterrorTrainingerror');
+
+% 
+% alphas = [0.1, 0.3, 0.5, 1, 4, 8, 16];
+% dropoutRates = [0.5, 0.65, 0.8, 0.95, 1.0];
+% noiseRates = [0.95, 0.98, 0.995, 0.999, 1.0];
+% batchSize = 10;
+% maxEpoch = 200;
+% 
+% for a = 1:length(alphas)
+%     opt.dropout = true;
+%     opt.gaussian = false;
+%     for i = 1:length(dropoutRates)
+%         for h = 1:length(dropoutRates)
+%             opt = initializeOptions();
+%             opt.alpha = alphas(a);
+%             opt.batchSize = batchSize;
+%             opt.numEpochs = maxEpoch;
+%             opt.input_do_rate = dropoutRates(i);
+%             opt.hidden_do_rate = dropoutRates(h);
+%             
+%             tic;
+%             errors = test_nn(opt);
+%             toc;
+%             disp(sprintf('dropout'));
+%             disp(sprintf('alpha: %d input_do_rate: %d hidden_do_rate: %d',...
+%                 opt.alpha, opt.input_do_rate, opt.hidden_do_rate));
+%             [ time, value ] = findConvergence(errors);
+%             disp(sprintf('final error: %d convergence time: %d', value, time))
+%             
+% %             plot(1:opt.numEpochs, errors_1, 'r', 1:opt.numEpochs, errors_2, 'g', 1:opt.numEpochs, errors_3, 'b');
+% %             hold on;
+% %             figure;
+%         end
+%     end
+%     opt.dropout = false;
+%     opt.gaussian = true;
+%     for i = 1:length(noiseRates)
+%         for h = 1:length(noiseRates)
+%             opt = initializeOptions();
+%             opt.alpha = alphas(a);
+%             opt.batchSize = batchSize;
+%             opt.numEpochs = maxEpoch;
+%             opt.input_do_rate = noiseRates(i);
+%             opt.hidden_do_rate = noiseRates(h);
+%             
+%             tic;
+%             errors = test_nn(opt);
+%             toc;
+%             disp(sprintf('gaussian noise'));
+%             disp(sprintf('alpha: %d input_do_rate: %d hidden_do_rate: %d',...
+%                 opt.alpha, opt.input_do_rate, opt.hidden_do_rate));
+%             [ time, value ] = findConvergence(errors);
+%             disp(sprintf('final error: %d convergence time: %d', value, time))
+%             
+% %             plot(1:opt.numEpochs, errors_1, 'r', 1:opt.numEpochs, errors_2, 'g', 1:opt.numEpochs, errors_3, 'b');
+% %             hold on;
+% %             figure;
+%         end
+%     end
+% end
