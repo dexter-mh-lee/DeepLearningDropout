@@ -8,4 +8,5 @@ function net = setup_nn(net, x , y)
 	l = length(net.layers);
 	net.layers{l}.w = rand(size(y,1),numNodePrev) * 2 - 1; % Initialize weight matrix - need to experiment with different methods
 	net.layers{l}.b = zeros(size(y,1),1);
+	net.layers{1}.do = ones(1) * -1;
 end

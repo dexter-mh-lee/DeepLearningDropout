@@ -5,7 +5,9 @@ function opt = initializeOptions()
 	opt.numEpochs = 10;
 	opt.input_do_rate = 0.8;
 	opt.hidden_do_rate = 0.5;
+	opt.do_again_rate = 0;
 	opt.gaussian = false;
 	opt.dropout = true;
+	opt.adaptive = false;
     opt.noiseScale = 0.06; % Found emperically. Relative noise to dropout rate
 end
