@@ -19,6 +19,7 @@ function net = backPropagation_nn(net, y, opt)
 	for l = 2 : numLayers
 		net.layers{l}.b = net.layers{l}.b - opt.alpha * sum(net.layers{l}.d,2) / size(net.layers{l}.d,2);
 		net.layers{l}.w = net.layers{l}.w - opt.alpha * net.layers{l}.d * net.layers{l - 1}.a' / size(net.layers{l}.d,2);
+    net.layers{l}.w = net.layers{l}.w .* net.layers{l-1}.dc;
 	end
 
 end

@@ -3,7 +3,7 @@ function net = feedForward_test_nn(net, x, input_do_rate, hidden_do_rate, dropou
 % rate. To be used on test data.
 	if nargin < 5
         dropout = false;
-    end
+  end
 
 
 	numLayers = length(net.layers); % total number of layers

@@ -9,5 +9,6 @@ function opt = initializeOptions()
 	opt.gaussian = false;
 	opt.dropout = true;
 	opt.adaptive = false;
-    opt.noiseScale = 0.06; % Found emperically. Relative noise to dropout rate
+  opt.noiseScale = 0.06; % Found emperically. Relative noise to dropout rate
+  opt.dropconnect = false;
 end
