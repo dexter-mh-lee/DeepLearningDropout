@@ -4,22 +4,27 @@ close all
 home
 addpath ../util;
 
-numEpochs = 200;
+numEpochs = 100;
 opt = initializeOptions();
 opt.alpha = 1; 
 opt.batchSize = 10;
 opt.numEpochs = numEpochs;
 
-dropoutRates = 0.5:0.01:1.0;
+dropoutRates = 0.85;
 
 pTesterrorTrainingerror = zeros(length(dropoutRates), numEpochs, 2);
 
 for do = 1:length(dropoutRates)
+    tic
     opt.input_do_rate = dropoutRates(do);
     opt.hidden_do_rate = dropoutRates(do);
-    [testErrors, trainingErrors] = test_nn(opt);
+    [testErrors, trainingErrors, testErrorsDropout] = test_nn(opt);
+    plot(testErrors, 'Color', 'r');
+    hold 'on';
+    plot(testErrorsDropout, 'Color', 'b');
     pTesterrorTrainingerror(do,:,1) = reshape(testErrors, [1, numEpochs, 1]);
     pTesterrorTrainingerror(do,:,2) = reshape(trainingErrors, [1, numEpochs, 1]);
+    toc
 end
 
 save('result.mat','pTesterrorTrainingerror');

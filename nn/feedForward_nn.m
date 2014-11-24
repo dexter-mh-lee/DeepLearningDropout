@@ -4,10 +4,6 @@ function net = feedForward_nn(net, x, opt, epochNum)
 	net.layers{1}.a = x;
   ido = opt.input_do_rate(epochNum);
   hdo = opt.hidden_do_rate(epochNum);
-  isFirst = false;
-  if net.layers{1}.do(1, 1) < 0
-      isFirst = true;
-  end
   if opt.gaussian
       noiseRate = 1-opt.noiseScale*(1-ido); %Scale noise from dropout rate.
       noiseSD = sqrt((1-noiseRate)/noiseRate); %Choose variance, then find standard deviation
@@ -16,7 +12,7 @@ function net = feedForward_nn(net, x, opt, epochNum)
   end
   net.layers{1}.dc = ones(size(net.layers{2}.w));
   if opt.dropout
-      if opt.adaptive && isFirst == false
+      if opt.adaptive
           %We want 0s changed to 1s with probability 1 (dropped out
           %probability 0) and 1s changed to 0s with probability (1-ido)/ido
           threshold = 1 - net.layers{1}.do * (1-ido)/ido;

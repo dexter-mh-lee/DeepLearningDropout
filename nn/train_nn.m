@@ -34,9 +34,31 @@ function net = train_nn(net, x, y, test_x, test_y, opt)
             meanTrainingError = meanTrainingError + net.L;
         end
         meanTrainingError = meanTrainingError / numBatches;
-        [er, bad] = testerror(net, test_x, test_y);
-        net.testErrors(i) = er;
-        net.trainingErrors(i) = meanTrainingError;
+        
+        if i == opt.numEpochs
+            if strcmp(opt.testerror, 'last')
+                [er, bad] = testerror(net, test_x, test_y);
+                net.testErrors = er;
+            end
+            if strcmp(opt.testerror_dropout, 'last')
+                [erd, badd] = testerror_dropout(net, test_x, test_y, opt.input_do_rate(i), opt.hidden_do_rate(i), 100);
+                net.testErrorsDropout = erd;
+            end
+            if strcmp(opt.trainingerror, 'last')
+                net.trainingErrors = meanTrainingError;
+            end
+        end
+        if strcmp(opt.testerror, 'all')
+            [er, bad] = testerror(net, test_x, test_y);
+            net.testErrors(i) = er;
+        end
+        if strcmp(opt.testerror_dropout, 'all')
+            [erd, badd] = testerror_dropout(net, test_x, test_y, opt.input_do_rate(i), opt.hidden_do_rate(i), 100);
+            net.testErrorsDropout(i) = erd;
+        end
+        if strcmp(opt.trainingerror, 'all')
+            net.trainingErrors(i) = meanTrainingError;
+        end
     end
     
 %      net.layers{2}.w = net.layers{2}.w * opt.input_do_rate;
