@@ -38,7 +38,7 @@ function net = feedForward_nn(net, x, opt, epochNum)
     if l < numLayers
       net.layers{l}.dc = ones(size(net.layers{l+1}.w));
       if opt.dropout
-        if opt.adaptive && isFirst == false
+        if opt.adaptive
             %As before, but with hdo
             threshold = 1 - net.layers{l}.do * (1-hdo)/hdo;
             %threshold = (1+hdo)/2 - net.layers{l}.do * ((1+hdo)/2 - 1 +((1-hdo)/hdo)*(1+hdo)/2);
