@@ -4,7 +4,6 @@ function net = feedForward_nn(net, x, opt, epochNum)
 	net.layers{1}.a = x;
   ido = opt.input_do_rate(epochNum);
   hdo = opt.hidden_do_rate(epochNum);
-  dao = opt.do_again_rate;
   isFirst = false;
   if net.layers{1}.do(1, 1) < 0
       isFirst = true;
@@ -18,7 +17,10 @@ function net = feedForward_nn(net, x, opt, epochNum)
   net.layers{1}.dc = ones(size(net.layers{2}.w));
   if opt.dropout
       if opt.adaptive && isFirst == false
-          threshold = net.layers{1}.do * (1 - 2 * dao) + dao;
+          %We want 0s changed to 1s with probability 1 (dropped out
+          %probability 0) and 1s changed to 0s with probability (1-ido)/ido
+          threshold = 1 - net.layers{1}.do * (1-ido)/ido;
+          %threshold = (1+ido)/2 - net.layers{1}.do * ((1+ido)/2 - 1 +((1-ido)/ido)*(1+ido)/2);
           net.layers{1}.do = rand(size(net.layers{1}.a)) <= threshold;
       else
           net.layers{1}.do = rand(size(net.layers{1}.a)) <= ido;
@@ -41,7 +43,9 @@ function net = feedForward_nn(net, x, opt, epochNum)
           net.layers{l}.dc = ones(size(net.layers{l+1}.w));
           if opt.dropout
             if opt.adaptive && isFirst == false
-                threshold = net.layers{l}.do * (1 - 2 * dao) + dao;
+                %As before, but with hdo
+                threshold = 1 - net.layers{l}.do * (1-hdo)/hdo;
+                %threshold = (1+hdo)/2 - net.layers{l}.do * ((1+hdo)/2 - 1 +((1-hdo)/hdo)*(1+hdo)/2);
                 net.layers{l}.do = rand(size(net.layers{l}.a)) <= threshold;
             else
                 net.layers{l}.do = rand(size(net.layers{l}.a)) <= hdo;
