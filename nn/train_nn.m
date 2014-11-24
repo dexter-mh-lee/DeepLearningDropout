@@ -18,8 +18,9 @@ function net = train_nn(net, x, y, test_x, test_y, opt)
     m = size(x, 2);
     numBatches = m / opt.batchSize;
     if rem(numBatches, 1) ~= 0
-        error('numbatches not integer');
+        warning('numbatches not integer');
     end
+    numBatches = floor(numBatches);
     for i = 1 : opt.numEpochs
         %disp(['epoch ' num2str(i) '/' num2str(opt.numEpochs)]);
         kk = randperm(m);
