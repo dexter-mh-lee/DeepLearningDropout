@@ -12,7 +12,7 @@ function net = feedForward_nn(net, x, opt, epochNum)
   end
   net.layers{1}.dc = ones(size(net.layers{2}.w));
   if opt.dropout
-      if opt.adaptive
+      if opt.adaptive && epochNum > 1
           %We want 0s changed to 1s with probability 1 (dropped out
           %probability 0) and 1s changed to 0s with probability (1-ido)/ido
           threshold = 1 - net.layers{1}.do * (1-ido)/ido;
@@ -38,7 +38,7 @@ function net = feedForward_nn(net, x, opt, epochNum)
     if l < numLayers
       net.layers{l}.dc = ones(size(net.layers{l+1}.w));
       if opt.dropout
-        if opt.adaptive
+        if opt.adaptive && epochNum > 1
             %As before, but with hdo
             threshold = 1 - net.layers{l}.do * (1-hdo)/hdo;
             %threshold = (1+hdo)/2 - net.layers{l}.do * ((1+hdo)/2 - 1 +((1-hdo)/hdo)*(1+hdo)/2);
