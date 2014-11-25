@@ -10,7 +10,6 @@ function net = feedForward_nn(net, x, opt, epochNum)
       net.layers{1}.ga = normrnd(1, noiseSD, size(net.layers{1}.a));
       net.layers{1}.a = net.layers{1}.a .* net.layers{1}.ga;
   end
-  net.layers{1}.dc = ones(size(net.layers{2}.w));
   if opt.dropout
       if opt.adaptive
           %We want 0s changed to 1s with probability 1 (dropped out
@@ -24,11 +23,15 @@ function net = feedForward_nn(net, x, opt, epochNum)
       net.layers{1}.a = net.layers{1}.a .* net.layers{1}.do;
   elseif opt.dropconnect
       net.layers{1}.dc = rand(size(net.layers{2}.w)) <= ido;
+      net.layers{2}.wdc = net.layers{2}.w .* net.layers{1}.dc;
   end
-  net.layers{2}.wdc = net.layers{2}.w .* net.layers{1}.dc;
 
   for l = 2 : numLayers
-    net.layers{l}.a = sigmoid(bsxfun(@plus, net.layers{l}.wdc * net.layers{l - 1}.a, net.layers{l}.b));
+    if opt.dropconnect
+      net.layers{l}.a = sigmoid(bsxfun(@plus, net.layers{l}.wdc * net.layers{l - 1}.a, net.layers{l}.b));
+    else
+      net.layers{l}.a = sigmoid(bsxfun(@plus, net.layers{l}.w * net.layers{l - 1}.a, net.layers{l}.b));
+    end
     if l < numLayers && opt.gaussian
         noiseRate = 1-opt.noiseScale*(1-hdo);
         noiseSD = sqrt((1-noiseRate)/noiseRate);
@@ -36,7 +39,6 @@ function net = feedForward_nn(net, x, opt, epochNum)
         net.layers{l}.a = net.layers{l}.a .* net.layers{l}.ga;
     end
     if l < numLayers
-      net.layers{l}.dc = ones(size(net.layers{l+1}.w));
       if opt.dropout
         if opt.adaptive
             %As before, but with hdo
@@ -49,8 +51,8 @@ function net = feedForward_nn(net, x, opt, epochNum)
         net.layers{l}.a = net.layers{l}.a .* net.layers{l}.do;
       elseif opt.dropconnect
         net.layers{l}.dc = rand(size(net.layers{l+1}.w)) <= hdo;
+        net.layers{l+1}.wdc = net.layers{l+1}.w .* net.layers{l}.dc;
       end
-      net.layers{l+1}.wdc = net.layers{l+1}.w .* net.layers{l}.dc;
     end
   end
 end
