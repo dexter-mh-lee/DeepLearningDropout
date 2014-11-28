@@ -15,17 +15,29 @@ function net = train_nn(net, x, y, test_x, test_y, opt)
         error('Invalid hidden dropout rate');
     end
 
+    if opt.sobol
+        net.sobol = sobolset(net.nodeRanges(size(net.nodeRanges,1)-1, 2));
+        %rand('state',0)
+    end
+    if opt.halton
+        net.halton = haltonset(net.nodeRanges(size(net.nodeRanges,1)-1, 2));
+        %rand('state',0)
+    end
+    
     m = size(x, 2);
     numBatches = m / opt.batchSize;
     if rem(numBatches, 1) ~= 0
         warning('numbatches not integer');
     end
     numBatches = floor(numBatches);
+    net.numBatches = numBatches;
     for i = 1 : opt.numEpochs
         %disp(['epoch ' num2str(i) '/' num2str(opt.numEpochs)]);
+        net.epochIndex = i;
         kk = randperm(m);
         meanTrainingError = 0;
         for l = 1 : numBatches
+            net.batchIndex = l;
             % each column is one training instance
             batch_x = x(:, kk((l - 1) * opt.batchSize + 1 : l * opt.batchSize));
             batch_y = y(:, kk((l - 1) * opt.batchSize + 1 : l * opt.batchSize));

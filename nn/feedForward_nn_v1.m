@@ -20,19 +20,19 @@ function net = feedForward_nn(net, x, opt, epochNum)
             %probability 0) and 1s changed to 0s with probability (1-ido)/ido
             threshold = 1 - net.layers{1}.do * (1-ido)/ido;
             %threshold = (1+ido)/2 - net.layers{1}.do * ((1+ido)/2 - 1 +((1-ido)/ido)*(1+ido)/2);
-            net.layers{1}.do = repmat(rand(size(net.layers{1}.a,1),1),[1,opt.batchSize]) <= threshold;
+            net.layers{1}.do = rand(size(net.layers{1}.a)) <= threshold;
         elseif opt.sobol
-            do2 = repmat(rand(size(net.layers{1}.a,1),1),[1,opt.batchSize]) <= ido; %Not used, but makes results consistent
+            do2 = rand(size(net.layers{1}.a)) <= ido; %For consistency
             batch = (net.epochIndex-1)*net.numBatches + net.batchIndex;
-            batchSobol = net.sobol(batch, :);
-            net.layers{1}.do = repmat((batchSobol(:,net.nodeRanges(1,1):net.nodeRanges(1,2)) <= ido)',[1,opt.batchSize]);
+            batchSobol = net.sobol((batch-1)*opt.batchSize+1:batch*opt.batchSize, :);
+            net.layers{1}.do = (batchSobol(:,net.nodeRanges(1,1):net.nodeRanges(1,2)) <= ido)';
         elseif opt.halton
-            do2 = repmat(rand(size(net.layers{1}.a,1),1),[1,opt.batchSize]) <= ido;
+            do2 = rand(size(net.layers{1}.a)) <= ido;
             batch = (net.epochIndex-1)*net.numBatches + net.batchIndex;
-            batchHalton = net.halton(batch, :);
-            net.layers{1}.do = repmat((batchHalton(:,net.nodeRanges(1,1):net.nodeRanges(1,2)) <= ido)',[1,opt.batchSize]);
+            batchHalton = net.halton((batch-1)*opt.batchSize+1:batch*opt.batchSize, :);
+            net.layers{1}.do = (batchHalton(:,net.nodeRanges(1,1):net.nodeRanges(1,2)) <= ido)';
         else
-            net.layers{1}.do = repmat(rand(size(net.layers{1}.a,1),1),[1,opt.batchSize]) <= ido;
+            net.layers{1}.do = rand(size(net.layers{1}.a)) <= ido;
         end
         net.layers{1}.a = net.layers{1}.a .* net.layers{1}.do;
     elseif opt.dropconnect
@@ -58,15 +58,15 @@ function net = feedForward_nn(net, x, opt, epochNum)
                     %As before, but with hdo
                     threshold = 1 - net.layers{l}.do * (1-hdo)/hdo;
                     %threshold = (1+hdo)/2 - net.layers{l}.do * ((1+hdo)/2 - 1 +((1-hdo)/hdo)*(1+hdo)/2);
-                    net.layers{l}.do = repmat(rand(size(net.layers{l}.a,1),1),[1,opt.batchSize]) <= threshold;
+                    net.layers{l}.do = rand(size(net.layers{l}.a)) <= threshold;
                 elseif opt.sobol
-                    do2 = repmat(rand(size(net.layers{l}.a,1),1),[1,opt.batchSize]) <= ido;
-                    net.layers{l}.do = repmat((batchSobol(:,net.nodeRanges(l,1):net.nodeRanges(l,2)) <= hdo)',[1,opt.batchSize]);
+                    do2 = rand(size(net.layers{l}.a)) <= hdo;
+                    net.layers{l}.do = (batchSobol(:,net.nodeRanges(l,1):net.nodeRanges(l,2)) <= hdo)';
                 elseif opt.halton
-                    do2 = repmat(rand(size(net.layers{l}.a,1),1),[1,opt.batchSize]) <= ido;
-                    net.layers{l}.do = repmat((batchHalton(:,net.nodeRanges(l,1):net.nodeRanges(l,2)) <= hdo)',[1,opt.batchSize]);
+                    do2 = rand(size(net.layers{l}.a)) <= hdo;
+                    net.layers{l}.do = (batchHalton(:,net.nodeRanges(l,1):net.nodeRanges(l,2)) <= hdo)';
                 else
-                    net.layers{l}.do = repmat(rand(size(net.layers{l}.a,1),1),[1,opt.batchSize]) <= hdo;
+                    net.layers{l}.do = rand(size(net.layers{l}.a)) <= hdo;
                 end
                 net.layers{l}.a = net.layers{l}.a .* net.layers{l}.do;
             elseif opt.dropconnect
