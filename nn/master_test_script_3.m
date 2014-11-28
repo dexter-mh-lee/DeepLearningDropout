@@ -56,15 +56,7 @@ concave_increase = 1.5 - convex_decrease;
 linear_increase_3 = 0.3:0.7/199:1.0;
 linear_increase_7 = 0.7:0.3/199:1.0;
 
-datasets = {'../data/cnae.mat',
-'../data/banknote.mat',
-'../data/winequality.mat',
-'../data/pageblocks.mat',
-'../data/wallrobot.mat',
-'../data/magic04.mat',
-'../data/letterrecognition.mat',
-'../data/shuttle.mat'
-'../data/gisette.mat',
+datasets = {'../data/cnae.mat'
 };
 
 results = []
@@ -209,7 +201,7 @@ for ds = 1:length(datasets)
         results.adaptive{ds}{i}.test = testErrors;
     end
 end
-opt.adaptive = false
+opt.adaptive = false;
 
 save('results');
 
