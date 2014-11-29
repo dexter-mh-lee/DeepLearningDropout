@@ -3,8 +3,12 @@ function net = backPropagation_nn(net, y, opt)
 
 	e = net.layers{numLayers}.a - y; % Total error
 	net.L = 1/2* sum(e(:) .^ 2) / size(e, 2); % Mean-squared loss for future checking
-	net.layers{numLayers}.d = e .* (net.layers{numLayers}.a .* (1 - net.layers{numLayers}.a));
-
+	if opt.regression
+    net.layers{numLayers}.d = e;
+  else
+    net.layers{numLayers}.d = e .* (net.layers{numLayers}.a .* (1 - net.layers{numLayers}.a));
+  end
+  
 	% Compute delta values for each layer
 	for l = (numLayers - 1) : -1 : 1
 		if opt.gaussian

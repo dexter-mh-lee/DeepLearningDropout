@@ -19,17 +19,17 @@ function [testErrors, trainingErrors, testErrorsDropout] = test_nn(opt);
     nn = setup_nn(nn, train_x, train_y);
     nn = train_nn(nn, train_x, train_y, test_x, test_y, opt);
     
-    if strcmp(opt.testerror, 'all') | strcmp(opt.testerror, 'last')
+    if strcmp(opt.testerror, 'all') || strcmp(opt.testerror, 'last')
         testErrors = nn.testErrors;
     else
         testErrors = [];
     end
-    if strcmp(opt.testerror_dropout, 'all') | strcmp(opt.testerror, 'last')
+    if strcmp(opt.testerror_dropout, 'all') || strcmp(opt.testerror, 'last')
         testErrorsDropout = nn.testErrorsDropout;
     else
         testErrorsDropout = [];
     end
-    if strcmp(opt.trainingerror, 'all') | strcmp(opt.trainingerror, 'last')
+    if strcmp(opt.trainingerror, 'all') || strcmp(opt.trainingerror, 'last')
         trainingErrors = nn.trainingErrors;
     else
         trainingErrors = [];

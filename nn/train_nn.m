@@ -22,7 +22,7 @@ function net = train_nn(net, x, y, test_x, test_y, opt)
     end
     numBatches = floor(numBatches);
     for i = 1 : opt.numEpochs
-        %disp(['epoch ' num2str(i) '/' num2str(opt.numEpochs)]);
+%         disp(['epoch ' num2str(i) '/' num2str(opt.numEpochs)]);
         kk = randperm(m);
         meanTrainingError = 0;
         for l = 1 : numBatches
@@ -38,11 +38,11 @@ function net = train_nn(net, x, y, test_x, test_y, opt)
         
         if i == opt.numEpochs
             if strcmp(opt.testerror, 'last')
-                [er, bad] = testerror(net, test_x, test_y);
+                [er, bad] = testerror(net, test_x, test_y, opt.regression);
                 net.testErrors = er;
             end
             if strcmp(opt.testerror_dropout, 'last')
-                [erd, badd] = testerror_dropout(net, test_x, test_y, opt.input_do_rate(i), opt.hidden_do_rate(i), 100);
+                [erd, badd] = testerror_dropout(net, test_x, test_y, opt.input_do_rate(i), opt.hidden_do_rate(i), 100, opt.regression);
                 net.testErrorsDropout = erd;
             end
             if strcmp(opt.trainingerror, 'last')
@@ -50,11 +50,11 @@ function net = train_nn(net, x, y, test_x, test_y, opt)
             end
         end
         if strcmp(opt.testerror, 'all')
-            [er, bad] = testerror(net, test_x, test_y);
+            [er, bad] = testerror(net, test_x, test_y, opt.regression);
             net.testErrors(i) = er;
         end
         if strcmp(opt.testerror_dropout, 'all')
-            [erd, badd] = testerror_dropout(net, test_x, test_y, opt.input_do_rate(i), opt.hidden_do_rate(i), 100);
+            [erd, badd] = testerror_dropout(net, test_x, test_y, opt.input_do_rate(i), opt.hidden_do_rate(i), 100, opt.regression);
             net.testErrorsDropout(i) = erd;
         end
         if strcmp(opt.trainingerror, 'all')
