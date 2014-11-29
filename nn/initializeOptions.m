@@ -8,8 +8,11 @@ function opt = initializeOptions()
 	opt.gaussian = false;
 	opt.dropout = true;
 	opt.adaptive = false;
+    opt.sobol = false;
+    opt.halton = false;
   opt.noiseScale = 0.06; % Found emperically. Relative noise to dropout rate
   opt.dropconnect = false;
+  opt.boundedrandom = false;
   opt.dataset = '../data/gisette.mat';
     %../data/magic04.mat
     %../data/shuttle.mat

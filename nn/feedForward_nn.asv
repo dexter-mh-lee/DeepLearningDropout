@@ -61,6 +61,13 @@ function net = feedForward_nn(net, x, opt, epochNum)
           net.layers{l}.a = net.layers{l}.a .* net.layers{l}.ga;
       end
       if l < numLayers
+%         if opt.regression
+%           if opt.dropconnect
+%             net.layers{l}.a = (bsxfun(@plus, net.layers{l}.wdc * net.layers{l - 1}.a, net.layers{l}.b));
+%           else
+%             net.layers{l}.a = (bsxfun(@plus, net.layers{l}.w * net.layers{l - 1}.a, net.layers{l}.b));
+%           end
+%         else
           if opt.dropout
               if opt.adaptive && epochNum > 1
                   %As before, but with hdo
